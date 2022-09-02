@@ -1,4 +1,4 @@
-# self_supervised_MRI_Reconstruction
+# Self Supervised MRI Reconstruction
 
 Here is the list of supporting training methods:
 
