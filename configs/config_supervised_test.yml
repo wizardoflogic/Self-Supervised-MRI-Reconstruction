@@ -1,0 +1,86 @@
+client:
+  # Operation mode: train or test
+  mode: test
+
+data_transform:
+  # Type of k-space mask: random or equispaced
+  mask_type: random
+  # Number of center lines to use in mask
+  center_fractions: [0.08]
+  # Acceleration rates to use for masks
+  accelerations: [4]
+
+# fastmri.pl_modules.FastMriDataModule
+data_module:
+  # Path to fastMRI data root
+  data_path: ../data
+  # Path to data for test mode. This overwrites data_path and test_split
+  test_path: ../data/singlecoil_report
+  # Which challenge to preprocess for: singlecoil or multicoil
+  challenge: singlecoil
+  # Which data split to use as test split: test or challenge
+  test_split: test
+  # Fraction of slices in the dataset to use (train split only). If not given all will be used. Cannot set together with volume_sample_rate.
+  # Can be set to less than 1.0 for rapid prototyping. If not set, it defaults to 1.0.
+  sample_rate: 1.0
+  # Fraction of volumes of the dataset to use (train split only). If not given all will be used. Cannot set together with sample_rate.
+  # volume_sample_rate: None
+  # Whether to cache dataset metadata in a pkl file
+  use_dataset_cache_file: True
+  # Whether to combine train and val splits for training
+  combine_train_val: False
+
+# fastmri.pl_modules.FastMriDataModule
+data_loader:
+  # Data loader batch size
+  batch_size: 1
+  # Number of workers to use in data loader
+  num_workers: 2
+
+# fastmri.pl_modules.MriModule
+logging:
+  # Number of images to log to Tensorboard
+  num_log_images: 16
+
+# fastmri.pl_modules.UnetModule
+network:
+  # Number of U-Net input channels
+  in_chans: 1
+  # Number of U-Net output channels
+  out_chans: 1
+  # Number of top-level U-Net filters
+  chans: 32
+  # Number of U-Net pooling layers
+  num_pool_layers: 4
+  # U-Net dropout probability
+  drop_prob: 0.0
+
+# fastmri.pl_modules.UnetModule
+training:
+  # RMSProp learning rate
+  lr: 0.001
+  # Epoch at which to decrease step size
+  lr_step_size: 40
+  # Amount to decrease step size
+  lr_gamma: 0.1
+  # Strength of weight decay regularization
+  weight_decay: 0.0
+
+# pytorch_lightning.Trainer
+trainer:
+  # number of gpus to use
+  gpus: 0
+  # this is necessary for volume dispatch during val
+  replace_sampler_ddp: False
+  # what distributed version to use: ddp or ddp_cpu
+  accelerator: ddp_cpu
+  # random seed
+  seed: 42
+  # makes things slower, but deterministic
+  deterministic: True
+  # directory for logs and checkpoints
+  default_root_dir: ../output/supervised
+  # max number of epochs
+  max_epochs: 20
+  # path to checkpoint file
+  resume_from_checkpoint: ../output/supervised/epoch=20-step=729581.ckpt

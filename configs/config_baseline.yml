@@ -1,0 +1,6 @@
+device: cpu # cpu or cuda
+
+paths:
+  output_path: ../output/baseline
+  data_path: ../data/singlecoil_test
+  state_dict_file: ../output/baseline/knee_sc_leaderboard_state_dict.pt
